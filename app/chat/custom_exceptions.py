@@ -1,0 +1,2 @@
+class CuEFaCompareError(Exception):
+    pass
