@@ -1,40 +1,55 @@
 from __future__ import annotations
 
+import random
 from enum import Enum, unique
 from typing import Any
 
-from chat.custom_exceptions import CuEFaCompareError
+
+class BaseCustomEnum(Enum):
+    @classmethod
+    def get_values(cls):
+        return [en.value for en in cls]
 
 
 @unique
-class CuEFaResult(Enum):
-    DEFEAT = "DEFEAT"
+class CuEFaResult(BaseCustomEnum):
+    LOSE = "Поражение... с позором."
+    WIN = "Победа!!!"
+    DRAW = "Ничья."
+
+
+@unique
+class ActionType(BaseCustomEnum):
+    GAME = "Начать игру"
+    STAT = "Вывести статистику игрока"
+    HELP = "Что делает бот?"
+    BACK = "В главное меню"
+
+
+class StatType(str, Enum):
+    TOTAL = "TOTAL"
     WIN = "WIN"
+    LOSE = "LOSE"
     DRAW = "DRAW"
 
 
 @unique
-class ActionType(Enum):
-    GAME = "game"
-    STAT = "stat"
+class CuEFaType(BaseCustomEnum):
+    SCISSORS = "Ножницы"
+    STONE = "Камень"
+    PAPER = "Бумага"
 
-
-@unique
-class CuEFaType(Enum):
-    SCISSORS = "SCISSORS"
-    STONE = "STONE"
-    PAPER = "PAPER"
+    @classmethod
+    def get_random_enum(cls):
+        return cls(random.choice(cls.get_values()))
 
     def __eq__(self, other: CuEFaType | Any) -> CuEFaResult:
-        if not isinstance(other, CuEFaType):
-            raise CuEFaCompareError
         if self.value == other.value:
             return CuEFaResult.DRAW
-
         if (
-            (self.value == CuEFaType.SCISSORS and other.value == CuEFaType.PAPER)
-            or (self.value == CuEFaType.STONE and other.value == CuEFaType.SCISSORS)
-            or (self.value == CuEFaType.PAPER and other.value == CuEFaType.STONE)
+            (self.value == CuEFaType.SCISSORS.value and other.value == CuEFaType.PAPER.value)
+            or (self.value == CuEFaType.STONE.value and other.value == CuEFaType.SCISSORS.value)
+            or (self.value == CuEFaType.PAPER.value and other.value == CuEFaType.STONE.value)
         ):
             return CuEFaResult.WIN
-        return CuEFaResult.DEFEAT
+        return CuEFaResult.LOSE
