@@ -11,6 +11,7 @@ python-decouple = "^3.8"
 aiogram = "^2.25.1"
 loguru = "^0.7.0"
 pre-commit = "^3.2.2"
+aiofiles = "^23.1.0"
 
 
 [build-system]
